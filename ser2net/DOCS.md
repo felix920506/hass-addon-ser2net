@@ -29,8 +29,8 @@ RTS/DTR.
    again and click **Check for updates**, then reload the page.
 5. Scroll to the **ser2net Home Assistant Add-on** section and click
    **ser2net server**.
-6. Click **Install**. The Supervisor builds the add-on image on your device,
-   so the first install can take a few minutes, especially on a Raspberry Pi.
+6. Click **Install**. The Supervisor downloads the prebuilt add-on image
+   from the GitHub Container Registry.
 
 You can also open the "add repository" dialog straight from this link,
 if [My Home Assistant][my-ha] is set up:
@@ -66,23 +66,43 @@ enable_admin_interface: true
 
 ### Option: `serial_device`
 
-The serial device to expose. The configuration UI shows a drop-down list of
-the serial devices it finds on the host.
+What ser2net connects to. It accepts any of these forms:
 
-Pick the `/dev/serial/by-id/...` path when you can. Paths like
-`/dev/ttyUSB0` and `/dev/ttyACM0` can change after a reboot or when you
-plug in another device.
+| Value                 | Connects to                                               |
+| --------------------- | --------------------------------------------------------- |
+| `/dev/...`            | A serial device on the Home Assistant host.               |
+| `socket://HOST:PORT`  | A raw TCP port, such as a terminal server port.           |
+| `rfc2217://HOST:PORT` | A telnet / RFC 2217 port on a remote serial server.       |
+| Anything else         | Passed to ser2net unchanged as a [gensio][gensio] string. |
 
-To see the devices on your host, go to **Settings** → **System** →
-**Hardware** → **⋮** → **All hardware**.
+For a local device, pick the `/dev/serial/by-id/...` path when you can.
+Paths like `/dev/ttyUSB0` and `/dev/ttyACM0` can change after a reboot or
+when you plug in another device. To see the devices on your host, go to
+**Settings** → **System** → **Hardware** → **⋮** → **All hardware**.
+
+The value isn't checked when you save it. If ser2net can't use it, the
+add-on keeps running, but the add-on log shows an error and clients
+can't connect.
 
 Default: `/dev/ttyACM0`
+
+#### Example: share a terminal server port between several clients
+
+```yaml
+serial_device: socket://172.20.3.167:1027
+max_connections: 4
+enable_admin_interface: true
+```
+
+Every connected client sees the output from the remote port, and what
+any of them types is sent to it.
 
 ### Option: `max_connections`
 
 How many network clients can be connected to the serial port at once.
 Most serial devices expect only one client, so leave this at `1` unless you
-know you need more.
+know you need more. Set it higher to share one port between several
+clients, as in the terminal server example above.
 
 Default: `1`
 
@@ -153,6 +173,9 @@ address, and `7000` with the host port you set.
   **⋮** → **Check for updates** in the Add-on Store and reload the page.
   Then check **Settings** → **System** → **Logs** → **Supervisor** for
   repository errors.
+- **Clients connect but nothing happens.** Check the add-on log for a
+  `device configuration ... invalid` error, which means ser2net couldn't
+  use the `serial_device` value.
 - **The add-on stops right after starting.** Check that the device chosen
   in `serial_device` exists and that no other add-on or integration (such
   as ZHA or Z-Wave JS) is using it.
@@ -165,6 +188,7 @@ address, and `7000` with the host port you set.
 
 Got questions or found a bug? [Open an issue on GitHub][issue].
 
+[gensio]: https://github.com/cminyard/gensio
 [issue]: https://github.com/felix920506/hass-addon-ser2net/issues
 [my-badge]: https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg
 [my-ha]: https://my.home-assistant.io/
