@@ -61,11 +61,11 @@ jobs:
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
-            TAGS="ghcr.io/${{ github.repository_owner }}/ser2net:${{ matrix.arch }}-${VERSION}"
-            TAGS="${TAGS},ghcr.io/${{ github.repository_owner }}/ser2net:${{ matrix.arch }}-latest"
+            TAGS="ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:${VERSION}-${{ matrix.arch }}"
+            TAGS="${TAGS},ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:latest-${{ matrix.arch }}"
           else
             VERSION="dev"
-            TAGS="ghcr.io/${{ github.repository_owner }}/ser2net:${{ matrix.arch }}-dev"
+            TAGS="ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:dev-${{ matrix.arch }}"
           fi
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "tags=${TAGS}" >> "${GITHUB_OUTPUT}"

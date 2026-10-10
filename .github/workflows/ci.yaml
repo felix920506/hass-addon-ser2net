@@ -14,5 +14,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  workflows:
-    uses: jhollowe-addons/workflows/.github/workflows/addon-ci.yaml@main
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run yamllint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_data: |
+            extends: default
+            rules:
+              line-length:
+                max: 120
+
+      - name: Run hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ser2net/Dockerfile
