@@ -79,7 +79,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
-            BUILD_FROM=ghcr.io/hassio-addons/base:18.0.2
+            BUILD_FROM=ghcr.io/hassio-addons/base:21.0.8
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_DATE=${{ steps.meta.outputs.date }}
             BUILD_DESCRIPTION=Expose serial ports over the network, including RFC2217 support for remote port settings change

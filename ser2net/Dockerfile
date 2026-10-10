@@ -2,9 +2,21 @@ ARG BUILD_FROM
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
-# install needed packages
-RUN apk add --no-cache \
-    ser2net=4.6.4-r0
+# Build and install ser2net from source
+# hadolint ignore=DL3018
+RUN apk add --no-cache --virtual .build-deps \
+        build-base cmake pkgconf gensio-dev libyaml-dev \
+    && curl -fsSL -o /tmp/ser2net.tar.gz \
+       "https://github.com/cminyard/ser2net/releases/download/v4.6.8/ser2net-4.6.8.tar.gz" \
+    && tar -xzf /tmp/ser2net.tar.gz -C /tmp \
+    && cmake -S /tmp/ser2net-4.6.8 -B /tmp/build \
+       -DCMAKE_INSTALL_PREFIX=/usr \
+       -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build /tmp/build --parallel "$(nproc)" \
+    && cmake --install /tmp/build \
+    && apk del .build-deps \
+    && apk add --no-cache libgensio libyaml \
+    && rm -rf /tmp/ser2net* /tmp/build
 
 # Copy root filesystem
 COPY rootfs /
