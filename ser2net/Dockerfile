@@ -16,7 +16,8 @@ RUN apk add --no-cache --virtual .build-deps \
     && cd / \
     && apk del .build-deps \
     && apk add --no-cache gensio-libs yaml \
-    && rm -rf /tmp/ser2net*
+    && rm -rf /tmp/ser2net* \
+    && ser2net -v
 
 # Copy root filesystem
 COPY rootfs /
