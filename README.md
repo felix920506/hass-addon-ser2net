@@ -27,6 +27,11 @@ This addon runs ser2net, a tool to expose a serial device over the network.
 3. Find **ser2net server** in the store, click **Install**, then set the
    serial device on the **Configuration** tab and start the add-on.
 
+The repository also has **ser2net server (dev)**, which runs the latest
+build from the `main` branch instead of the latest release. Install it
+instead of **ser2net server** if you want to try unreleased changes; see its
+[documentation][dev-docs].
+
 See the [documentation][docs] for local installation, all configuration
 options and how to connect to the serial port.
 
@@ -63,6 +68,7 @@ our [GitHub Repository][repository].
 [commits-shield]: https://img.shields.io/github/commit-activity/y/jhollowe-addons/addon-ser2net.svg
 [commits]: https://github.com/jhollowe-addons/addon-ser2net/commits/main
 [contributors]: https://github.com/jhollowe-addons/addon-ser2net/graphs/contributors
+[dev-docs]: ser2net-dev/DOCS.md
 [docs]: ser2net/DOCS.md
 [github-actions-shield]: https://github.com/jhollowe-addons/addon-ser2net/workflows/CI/badge.svg
 [github-actions]: https://github.com/jhollowe-addons/addon-ser2net/actions

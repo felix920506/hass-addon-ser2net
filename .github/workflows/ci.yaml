@@ -35,3 +35,22 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ser2net/Dockerfile
+
+      - name: Check dev add-on config matches release add-on
+        run: |
+          python3 -c "import yaml" 2>/dev/null || sudo apt-get install -y python3-yaml
+          python3 - <<'PY'
+          import sys
+          import yaml
+
+          own = {"name", "version", "slug", "description", "stage"}
+          release = yaml.safe_load(open("ser2net/config.yaml"))
+          dev = yaml.safe_load(open("ser2net-dev/config.yaml"))
+          diff = sorted(
+              k for k in (release.keys() | dev.keys()) - own
+              if release.get(k) != dev.get(k)
+          )
+          if diff:
+              print("ser2net-dev/config.yaml differs from ser2net/config.yaml in:", ", ".join(diff))
+              sys.exit(1)
+          PY

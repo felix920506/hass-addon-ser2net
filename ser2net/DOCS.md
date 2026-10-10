@@ -32,6 +32,10 @@ RTS/DTR.
 6. Click **Install**. The Supervisor downloads the prebuilt add-on image
    from the GitHub Container Registry.
 
+The repository also lists **ser2net server (dev)**. It runs the latest
+development build from the `main` branch instead of the latest release, and
+may be broken. Install it only if you want to try unreleased changes.
+
 You can also open the "add repository" dialog straight from this link,
 if [My Home Assistant][my-ha] is set up:
 
