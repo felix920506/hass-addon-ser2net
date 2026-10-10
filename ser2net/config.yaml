@@ -1,6 +1,6 @@
 ---
 name: ser2net server
-version: "0.2"
+version: "0.3"
 slug: ser2net
 image: ghcr.io/felix920506/hass-addon-ser2net
 description: >

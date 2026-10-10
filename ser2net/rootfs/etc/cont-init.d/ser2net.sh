@@ -30,7 +30,10 @@ case "$device_path" in
 esac
 bashio::log.info "Using connector: $connector"
 
-cat >> /etc/ser2net/ser2net.yaml << EOF
+# ser2net is built from source, which doesn't install a config file, so
+# write it from scratch.
+mkdir -p /etc/ser2net
+cat > /etc/ser2net/ser2net.yaml << EOF
 
 connection: &serport
   accepter: telnet(rfc2217),tcp,$data_port
