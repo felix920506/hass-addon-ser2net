@@ -1,7 +1,8 @@
 ---
 name: ser2net server
-version: dev
+version: "0.1"
 slug: ser2net
+image: ghcr.io/felix920506/hass-addon-ser2net
 description: >
   Expose serial ports over the network, including RFC2217 support
   for remote port settings change (e.g. baud rate or RTS)
@@ -16,7 +17,7 @@ ports:
 ports_description:
   12345/tcp: "port to access serial device (tcp or telnet/rfc2217)"
   12346/tcp: "port to access admin interface (if enabled))"
-uart: true # auto-map serial devices into the container
+uart: true  # auto-map serial devices into the container
 # usb: true
 options:
   serial_device: /dev/ttyACM0
