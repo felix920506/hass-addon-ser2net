@@ -5,7 +5,7 @@ FROM ${BUILD_FROM}
 # Build and install ser2net from source
 # hadolint ignore=DL3018
 RUN apk add --no-cache --virtual .build-deps \
-        build-base pkgconf gensio-dev yaml-dev \
+        build-base linux-headers pkgconf gensio-dev yaml-dev \
     && curl -fsSL -o /tmp/ser2net.tar.gz \
        "https://github.com/cminyard/ser2net/releases/download/v4.6.8/ser2net-4.6.8.tar.gz" \
     && tar -xzf /tmp/ser2net.tar.gz -C /tmp \
@@ -15,7 +15,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && make install \
     && cd / \
     && apk del .build-deps \
-    && apk add --no-cache gensio yaml \
+    && apk add --no-cache gensio-libs yaml \
     && rm -rf /tmp/ser2net*
 
 # Copy root filesystem
