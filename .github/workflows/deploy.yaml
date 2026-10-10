@@ -4,6 +4,8 @@ name: Deploy
 # yamllint disable-line rule:truthy
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
   workflow_dispatch:
@@ -48,13 +50,14 @@ jobs:
       - name: Determine version and image tags
         id: meta
         run: |
-          if [[ "${GITHUB_REF}" != refs/tags/v* ]]; then
-            echo "::error::Deploy only runs for v* release tags"
-            exit 1
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            TAGS="ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:${VERSION}-${{ matrix.arch }}"
+            TAGS="${TAGS},ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:latest-${{ matrix.arch }}"
+          else
+            VERSION="dev"
+            TAGS="ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:dev-${{ matrix.arch }}"
           fi
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          TAGS="ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:${VERSION}-${{ matrix.arch }}"
-          TAGS="${TAGS},ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:latest-${{ matrix.arch }}"
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "tags=${TAGS}" >> "${GITHUB_OUTPUT}"
           echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "${GITHUB_OUTPUT}"
@@ -96,9 +99,25 @@ jobs:
 
       - name: Determine version
         id: meta
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "${GITHUB_OUTPUT}"
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> "${GITHUB_OUTPUT}"
+            echo "is_release=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "version=dev" >> "${GITHUB_OUTPUT}"
+            echo "is_release=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Create and push dev manifest
+        if: steps.meta.outputs.is_release == 'false'
+        run: |
+          docker buildx imagetools create \
+            --tag ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:dev \
+            ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:dev-aarch64 \
+            ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:dev-amd64
 
       - name: Create and push release manifests
+        if: steps.meta.outputs.is_release == 'true'
         run: |
           docker buildx imagetools create \
             --tag ghcr.io/${{ github.repository_owner }}/hass-addon-ser2net:latest \
