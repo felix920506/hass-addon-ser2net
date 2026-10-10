@@ -22,6 +22,17 @@ This addon runs ser2net, a tool to expose a serial device over the network.
 
 [:books: Read the full add-on documentation][docs]
 
+## Installation
+
+1. In Home Assistant, go to **Settings** → **Add-ons** → **Add-on Store**.
+2. Open the **⋮** menu, choose **Repositories** and add
+   `https://github.com/felix920506/hass-addon-ser2net`.
+3. Find **ser2net server** in the store, click **Install**, then set the
+   serial device on the **Configuration** tab and start the add-on.
+
+See the [documentation][docs] for local installation, all configuration
+options and how to connect to the serial port.
+
 ## Support
 
 Got questions? [open an issue here][issue] on GitHub.
@@ -58,7 +69,7 @@ our [GitHub Repository][repository].
 [commits-shield]: https://img.shields.io/github/commit-activity/y/jhollowe-addons/addon-ser2net.svg
 [commits]: https://github.com/jhollowe-addons/addon-ser2net/commits/main
 [contributors]: https://github.com/jhollowe-addons/addon-ser2net/graphs/contributors
-[docs]: https://github.com/jhollowe-addons/addon-ser2net/blob/main/ser2net/DOCS.md
+[docs]: ser2net/DOCS.md
 [github-actions-shield]: https://github.com/jhollowe-addons/addon-ser2net/workflows/CI/badge.svg
 [github-actions]: https://github.com/jhollowe-addons/addon-ser2net/actions
 [issue]: https://github.com/jhollowe-addons/addon-ser2net/issues
